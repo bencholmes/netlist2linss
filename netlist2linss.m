@@ -170,6 +170,40 @@ end
 
 end
 
+% CONVERTVALUES     Converts the symbolic value to a more comprehensible
+% symbolic value.
+function [ components ] = convertValues( components )
+
+for n=1:length(components)
+    str = components(n).value;
+    
+    % Replace kilo with 10^3
+    str = strrep(str,'k','e3');
+    
+    % Replace Mega with 10^6
+    str = strrep(str,'M','e6');
+    
+    % Replace milli with 10^-3
+    str = strrep(str,'m','e-3');
+   
+    % Replace micro with 10^-6
+    str = strrep(str,'u','e-6');
+    
+    % Replace nano with 10^-9
+    str = strrep(str,'n','e-9');
+    
+    % Replace pico with 10^-12
+    str = strrep(str,'p','e-12');
+    
+    % Remove curly brackets
+    str = strrep(str,'{','');
+    str = strrep(str,'}','');
+    
+    components(n).value = str;
+end
+
+end
+
 % PARSECOMPONENTS   Parses the cleaned netlist into a component struct
 % containing relevant information, the number of components, and the key
 % between the netlist node names and the numeric nodes used in this file.
@@ -238,6 +272,8 @@ for n=1:length(arguments)
     components(n).value = arguments{n,1}(2 + components(n).pins);
 end
 
+% Replace component values with MATLAB functional ones
+components = convertValues( components );
 
 % Parse node positions
 nodeKey = cell(1,1);    % Numeric -> String
