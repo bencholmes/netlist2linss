@@ -27,7 +27,7 @@ A typical usage is shown in the script `test_script.m`.
 
 The technique is based from Martin Holter's paper *'Physical Modelling of a Wah-Wah Pedal as a Case Study for Application of the Nodal DK Method to Circuits with Variable Parts'* in which a method of automatically deriving state-space matrices from a Modified Nodal Analysis (MNA) format. Both the nonlinear aspects and decomposed inversion are ignored as the idea of this project is to create a tool to accurately capture tone circuits.
 
-MNA is a long used standard of perhaps inefficient but dependable circuit analysis. For this project, Erik Cheever's MATLAB script [**SCAM**](http://uk.mathworks.com/matlabcentral/fileexchange/3443-scam-a-tool-for-symbolically-solving-circuit-equations).
+MNA is a long used standard of perhaps inefficient but dependable circuit analysis. For this project, I used Erik Cheever's MATLAB script [**SCAM**](http://uk.mathworks.com/matlabcentral/fileexchange/3443-scam-a-tool-for-symbolically-solving-circuit-equations).
 
 The discretisation scheme used is Trapezoidal.
 
@@ -35,3 +35,4 @@ The discretisation scheme used is Trapezoidal.
 
 - Add continuous domain option
 - Add ability to parse values of components from netlist
+- Port to Python
