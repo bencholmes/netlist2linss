@@ -17,7 +17,9 @@ The netlist must consist of only linear components, but has currently only been 
 
 Values of components are ignored during the creation of the state-space matrices, and must be added using
 
-```subs(matrix,component_symbol,component_value)```
+```
+subs(matrix,component_symbol,component_value)
+```
 
 A typical usage is shown in the script `test_script.m`.
 
