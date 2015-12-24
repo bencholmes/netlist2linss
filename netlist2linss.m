@@ -181,8 +181,8 @@ num = struct('nodes',0,'resistors',0,'reactive',0,'voltages',0,...
 
 % Components Cell Array:
 % Name | Type | ID | Component # | # Pins | Node(1:3)
-components = struct('name','','type','','id','','num',0,'pins',0,'node',...
-    [0 0]);
+components = struct('name','','type','','id','','num',0,'pins',0,...
+    'value',0,'node',[0 0]);
 components(length(arguments)).name = '';    % Assign enough components
 
 % Parse component names, type and letter
@@ -233,7 +233,11 @@ for n=1:length(arguments)
             num.currents = num.currents + 1;
             components(n).num = num.currents;
     end
+    
+    % Find value of component, position is dependent on num pins.
+    components(n).value = arguments{n,1}(2 + components(n).pins);
 end
+
 
 % Parse node positions
 nodeKey = cell(1,1);    % Numeric -> String
