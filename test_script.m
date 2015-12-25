@@ -10,8 +10,13 @@ fs = 44100;
 T_num = 1/fs;
 
 %% Get circuit state-space matrices
+% Create option set and specify options;
+opts = netlistoptions();
+opts.UseValues = false;
+opts.Ts = T_num;
+
 % Retrieve symbolic state-space matrices
-[A, B, C, D] = netlist2linss('netlist.net', 'Vout');
+[A, B, C, D] = netlist2linss('netlist.net', 'Vout', opts);
 
 % Add symbolic components and sampling period
 syms R1 R2 R3 R4 R5 C1 C2 C3 T

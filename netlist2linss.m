@@ -28,7 +28,7 @@ end
 
 % Handle varargin and options.
 if nargin == 3
-    opts = varargin{3};
+    opts = varargin{1};
 else
     opts = netlistoptions();
 end
