@@ -2,18 +2,18 @@ R1 Vin N002 100k
 R2 N001 Vout {(1-t)*250k}
 R3 Vout N003 {t*250k}
 R4 N003 N004 {b*250k}
-R5 N004 0 {m*10k}
+R5 N004 0 {l*10k}
 C2 N003 N002 100n
 C3 N004 N002 47n
 V1 Vin 0 AC 1
 C1 N001 Vin 250p
 .param b=0.99
-.param m=0.99
+.param l=0.99
 .param t=0.99
-* Parameters:\nt: Treble\nm: Mid\nb: Bass
+* Parameters:\nt: Treble\nl: Mid\nb: Bass
 .ac oct 24 20 20000
 * .step param t list 0.01 0.5 0.99
 * .step param b list 10E-05 0.5 0.99
-* .step param m list 10E-05 0.5 0.99
+* .step param l list 10E-05 0.5 0.99
 .backanno
 .end

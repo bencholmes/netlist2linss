@@ -43,7 +43,7 @@ arguments = parseNetlist( filename );
 [Nr, Nx, Nu] = createConnections( num, components );
 
 % Create conductance matrices and irrelevant U vector
-[Gr, Gx, U] = createElements( num, components, opts.Ts );
+[Gr, Gx, U] = createElements( num, components, opts );
 
 % Find output node from named nodes
 No = strcmp([key{:}], outputNode);
@@ -54,6 +54,12 @@ No = [No zeros(1, num.voltages)];
 
 % Combine incidence and conductance matrices to find state-space matrices.
 [A, B, C, D] = formSSMatrices(Nr, Nx, Nu, No, Gr, Gx, num);
+
+% Attempt to reduce the complexity of the symbolic expressions
+A = simplify(expand(A));
+B = simplify(expand(B));
+C = simplify(expand(C));
+D = simplify(expand(D));
 
 end
 
@@ -125,24 +131,30 @@ end
 
 % CREATEELEMENTS    Creates diagonal matrices containing symbolic
 % representations of the components in the circuit.
-function [Gr, Gx, U] = createElements( num, components, Ts )
+function [Gr, Gx, U] = createElements( num, components, opts )
 Gr = sym(zeros(num.resistors));
 Gx = sym(zeros(num.reactive));
 U = sym(zeros(1,num.voltages));
 
-if ~isempty(Ts)
-    T = Ts;
+if ~isempty(opts.Ts)
+    T = opts.Ts;
 else
     syms T;
 end
 
 for n=1:num.components
+    if opts.UseValues
+        componentValue = components(n).value;
+    else
+        componentValue = components(n).name;
+    end
+        
     if strcmp(components(n).id, 'R');
-        Gr(components(n).num, components(n).num) = 1/sym(components(n).name);
+        Gr(components(n).num, components(n).num) = 1/sym(componentValue);
     elseif strcmp(components(n).id, 'C');
-        Gx(components(n).num, components(n).num) = (2/T)*sym(components(n).name);
+        Gx(components(n).num, components(n).num) = (2/T)*sym(componentValue);
     elseif strcmp(components(n).id, 'L');
-        Gx(components(n).num, components(n).num) = (T/2)*sym(components(n).name);
+        Gx(components(n).num, components(n).num) = (T/2)*sym(componentValue);
     elseif strcmp(components(n).id, 'V') || strcmp(components(n).id, 'I');
         U(1, components(n).num) = sym(components(n).name);        
     end
