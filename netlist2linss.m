@@ -14,7 +14,8 @@
 %   - Add ability to extract component values from netlist (and also
 %   parameters).
 
-function [ A, B, C, D, varargout ] = netlist2linss( filename, outputNode )
+function [ A, B, C, D, varargout ] = netlist2linss( filename,...
+                                                    outputNode, varargin )
 
 % Input argument checking
 if ~ischar(filename)
@@ -23,6 +24,13 @@ end
 
 if ~ischar(outputNode)
     error('Output node must be string');
+end
+
+% Handle varargin and options.
+if nargin == 3
+    opts = varargin{3};
+else
+    opts = netlistoptions();
 end
 
 % Parse netlist file to a cell array of lines
@@ -35,7 +43,7 @@ arguments = parseNetlist( filename );
 [Nr, Nx, Nu] = createConnections( num, components );
 
 % Create conductance matrices and irrelevant U vector
-[Gr, Gx, U] = createElements( num, components );
+[Gr, Gx, U] = createElements( num, components, opts.Ts );
 
 % Find output node from named nodes
 No = strcmp([key{:}], outputNode);
@@ -117,12 +125,16 @@ end
 
 % CREATEELEMENTS    Creates diagonal matrices containing symbolic
 % representations of the components in the circuit.
-function [Gr, Gx, U] = createElements( num, components )
+function [Gr, Gx, U] = createElements( num, components, Ts )
 Gr = sym(zeros(num.resistors));
 Gx = sym(zeros(num.reactive));
 U = sym(zeros(1,num.voltages));
 
-syms T;
+if ~isempty(Ts)
+    T = Ts;
+else
+    syms T;
+end
 
 for n=1:num.components
     if strcmp(components(n).id, 'R');
